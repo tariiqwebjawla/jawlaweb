@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>دخول جولة</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="login-page">
+    <section class="login-card">
+      <div class="logo">💪</div>
+      <h1>جولة | JAWLA</h1>
+      <p>سجّل الدخول للوصول إلى الوجبات والتمارين والحاسبات.</p>
+
+      <form id="loginForm" class="login-form">
+        <label>
+          اسم المستخدم
+          <input id="username" autocomplete="username" placeholder="مثال: JAWLA0001">
+        </label>
+
+        <label>
+          كلمة المرور
+          <input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
+        </label>
+
+        <button class="primary-btn" type="submit">دخول</button>
+        <div id="loginMsg" class="login-msg"></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

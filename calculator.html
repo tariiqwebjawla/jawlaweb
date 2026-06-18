@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>حاسبات جولة</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <a href="home.html">الرئيسية</a>
+  <h1>حاسبات جولة</h1>
+  <a href="meals.html">الوجبات</a>
+<button type="button" onclick="logoutJawla()">خروج</button></header>
+
+<main class="container calc">
+  <section class="hero-mini">
+    <h2>حاسبة السعرات وخسارة الوزن</h2>
+    <p>احسب احتياجك اليومي، هدف خسارة الوزن، الماكروز، الماء، ومؤشر كتلة الجسم.</p>
+  </section>
+
+  <div class="panel calc-grid">
+    <label>الجنس
+      <select id="gender">
+        <option value="male">ذكر</option>
+        <option value="female">أنثى</option>
+      </select>
+    </label>
+
+    <label>العمر
+      <input id="age" type="number" placeholder="مثال: 27" min="10" max="90">
+    </label>
+
+    <label>الطول بالسنتيمتر
+      <input id="height" type="number" placeholder="مثال: 175" min="120" max="230">
+    </label>
+
+    <label>الوزن الحالي بالكجم
+      <input id="weight" type="number" placeholder="مثال: 85" min="30" max="250" step="0.1">
+    </label>
+
+    <label>الوزن المستهدف بالكجم
+      <input id="goalWeight" type="number" placeholder="اختياري: 75" min="30" max="250" step="0.1">
+    </label>
+
+    <label>مستوى النشاط
+      <select id="activity">
+        <option value="1.2">قليل الحركة</option>
+        <option value="1.375">نشاط خفيف</option>
+        <option value="1.55">نشاط متوسط</option>
+        <option value="1.725">نشاط عالي</option>
+        <option value="1.9">نشاط عالي جداً</option>
+      </select>
+    </label>
+
+    <label>الهدف
+      <select id="target">
+        <option value="lossModerate">خسارة وزن معتدلة</option>
+        <option value="lossFast">خسارة وزن سريعة</option>
+        <option value="cut">تنشيف</option>
+        <option value="maintain">المحافظة على الوزن</option>
+        <option value="leanBulk">بناء عضل نظيف</option>
+        <option value="bulk">تضخيم سريع</option>
+      </select>
+    </label>
+
+    <button class="primary-btn" onclick="calc()">احسب الآن</button>
+  </div>
+
+  <div id="result" class="result"></div>
+</main>
+<script src="js/calculator.js"></script>
+<script src="js/auth.js"></script><script>requireJawlaLogin();</script></body>
+</html>

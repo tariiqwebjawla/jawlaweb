@@ -1,0 +1,11 @@
+const ADMIN_USER='admin',ADMIN_PASS='jawla2026';
+function getAccounts(){return JSON.parse(localStorage.getItem('jawla_accounts')||'[]')}
+function saveAccounts(a){localStorage.setItem('jawla_accounts',JSON.stringify(a));renderAccounts()}
+function adminLogin(){if(adminUser.value===ADMIN_USER&&adminPass.value===ADMIN_PASS){login.classList.add('hidden');adminPanel.classList.remove('hidden');renderAccounts()}else alert('بيانات الدخول غير صحيحة')}
+function rand(n){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+function generateAccounts(){let arr=getAccounts(),n=Math.max(1,Math.min(500,+count.value||1)),m=+months.value;for(let i=0;i<n;i++){arr.unshift({code:'JAWLA-'+rand(8),password:rand(6),months:m,status:'unused',createdAt:new Date().toISOString(),activatedAt:null,expiresAt:null})}saveAccounts(arr)}
+function renderAccounts(){const body=document.getElementById('accountsBody');if(!body)return;let arr=getAccounts();accountStats.textContent=`إجمالي الحسابات: ${arr.length} | غير مستخدم: ${arr.filter(a=>a.status==='unused').length} | مفعل: ${arr.filter(a=>a.status==='active').length}`;body.innerHTML=arr.map(a=>`<tr><td>${a.code}</td><td>${a.password}</td><td>${a.months} شهر</td><td>${a.status}</td></tr>`).join('')}
+function clearAccounts(){if(confirm('حذف كل الحسابات؟'))saveAccounts([])}
+function exportCSV(){let arr=getAccounts();let csv='code,password,months,status,createdAt,activatedAt,expiresAt\n'+arr.map(a=>[a.code,a.password,a.months,a.status,a.createdAt,a.activatedAt||'',a.expiresAt||''].join(',')).join('\n');let blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='jawla-accounts.csv';a.click()}
+function activate(){let arr=getAccounts(),a=arr.find(x=>x.code===code.value.trim()&&x.password===pass.value.trim());if(!a)return activationResult.innerHTML='<h2>الحساب غير صحيح</h2>';if(a.status==='unused'){let now=new Date(),exp=new Date(now);exp.setMonth(exp.getMonth()+Number(a.months));a.status='active';a.activatedAt=now.toISOString();a.expiresAt=exp.toISOString();saveAccounts(arr)}activationResult.innerHTML=`<h2>تم التفعيل</h2><p>الحالة: ${a.status}</p><p>ينتهي: ${new Date(a.expiresAt).toLocaleDateString('ar-SA')}</p>`}
+renderAccounts();
