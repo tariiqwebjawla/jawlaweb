@@ -1,4 +1,28 @@
+function getDeviceId() {
+  let deviceId = localStorage.getItem('jawlaDeviceId');
+
+  if (!deviceId) {
+    deviceId =
+      'device_' +
+      Date.now().toString(36) +
+      '_' +
+      Math.random().toString(36).substring(2, 12);
+
+    localStorage.setItem('jawlaDeviceId', deviceId);
+  }
+
+  return deviceId;
+}
+
+function addMonths(date, months) {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
+}
+
 async function loginJawla(username, password) {
+  const deviceId = getDeviceId();
+
   const { data, error } = await db
     .from('user_accounts')
     .select('*')
@@ -11,12 +35,46 @@ async function loginJawla(username, password) {
     return { success: false, message: 'بيانات الدخول غير صحيحة' };
   }
 
+  const now = new Date();
+
   if (data.expires_at) {
     const expiry = new Date(data.expires_at);
-    const now = new Date();
 
     if (expiry < now) {
       return { success: false, message: 'انتهت صلاحية الاشتراك' };
+    }
+  }
+
+  if (data.device_id && data.device_id !== deviceId) {
+    return { success: false, message: 'هذا الحساب مفعل على جهاز آخر' };
+  }
+
+  if (!data.used_at) {
+    const months = data.duration_months || 3;
+    const expiresAt = addMonths(now, months).toISOString();
+
+    const { error: updateError } = await db
+      .from('user_accounts')
+      .update({
+        used_at: now.toISOString(),
+        expires_at: expiresAt,
+        device_id: deviceId
+      })
+      .eq('id', data.id);
+
+    if (updateError) {
+      return { success: false, message: 'تعذر تفعيل الحساب، حاول مرة أخرى' };
+    }
+  } else if (!data.device_id) {
+    const { error: deviceError } = await db
+      .from('user_accounts')
+      .update({
+        device_id: deviceId
+      })
+      .eq('id', data.id);
+
+    if (deviceError) {
+      return { success: false, message: 'تعذر ربط الجهاز، حاول مرة أخرى' };
     }
   }
 
