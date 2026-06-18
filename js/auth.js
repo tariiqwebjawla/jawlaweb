@@ -39,7 +39,6 @@ async function loginJawla(username, password) {
 
   if (data.expires_at) {
     const expiry = new Date(data.expires_at);
-
     if (expiry < now) {
       return { success: false, message: 'انتهت صلاحية الاشتراك' };
     }
@@ -65,6 +64,10 @@ async function loginJawla(username, password) {
     if (updateError) {
       return { success: false, message: 'تعذر تفعيل الحساب، حاول مرة أخرى' };
     }
+
+    data.used_at = now.toISOString();
+    data.expires_at = expiresAt;
+    data.device_id = deviceId;
   } else if (!data.device_id) {
     const { error: deviceError } = await db
       .from('user_accounts')
@@ -76,6 +79,8 @@ async function loginJawla(username, password) {
     if (deviceError) {
       return { success: false, message: 'تعذر ربط الجهاز، حاول مرة أخرى' };
     }
+
+    data.device_id = deviceId;
   }
 
   return { success: true, user: data };
@@ -115,6 +120,7 @@ function initJawlaLogin() {
 
     sessionStorage.setItem('jawlaLoggedIn', '1');
     sessionStorage.setItem('jawlaUser', username);
+    sessionStorage.setItem('jawlaPlan', result.user.plan_type || 'full');
 
     location.href = 'home.html';
   });
@@ -126,9 +132,21 @@ function requireJawlaLogin() {
   }
 }
 
+function requireJawlaPlan(allowedPlans) {
+  requireJawlaLogin();
+
+  const plan = sessionStorage.getItem('jawlaPlan') || 'full';
+
+  if (!allowedPlans.includes(plan) && plan !== 'full') {
+    alert('هذه الميزة غير متاحة في اشتراكك الحالي');
+    location.href = 'home.html';
+  }
+}
+
 function logoutJawla() {
   sessionStorage.removeItem('jawlaLoggedIn');
   sessionStorage.removeItem('jawlaUser');
+  sessionStorage.removeItem('jawlaPlan');
   location.href = 'index.html';
 }
 

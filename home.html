@@ -1,1 +1,62 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>جولة | JAWLA</title><link rel="stylesheet" href="css/style.css"></head><body><main class="home"><div class="brand"><div class="logo">💪</div><h1>جولة | JAWLA</h1><p>دليل الوجبات والتمارين والحاسبات</p></div><section class="choose"><a class="big-card meals" href="meals.html"><span>🍽️</span><h2>الوجبات</h2><p>400 وجبة مع فلترة السعرات والبروتين والهدف</p></a><a class="big-card workouts" href="workouts.html"><span>🏋️</span><h2>التمارين</h2><p>برامج تدريبية مرتبة حسب القسم والجدول والعضلة</p></a></section><div class="actions"><a href="calculator.html">حاسبات جولة</a><button type="button" onclick="logoutJawla()">تسجيل الخروج</button></div></main><script src="js/auth.js"></script><script>requireJawlaLogin();</script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>جولة | JAWLA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="home">
+    <div class="brand">
+      <div class="logo">💪</div>
+      <h1>جولة | JAWLA</h1>
+      <p id="planText">دليل الوجبات والتمارين والحاسبات</p>
+    </div>
+
+    <section class="choose">
+      <a id="mealsCard" class="big-card meals" href="meals.html">
+        <span>🍽️</span>
+        <h2>الوجبات</h2>
+        <p>400 وجبة مع فلترة السعرات والبروتين والهدف</p>
+      </a>
+
+      <a id="workoutsCard" class="big-card workouts" href="workouts.html">
+        <span>🏋️</span>
+        <h2>التمارين</h2>
+        <p>برامج تدريبية مرتبة حسب القسم والجدول والعضلة</p>
+      </a>
+    </section>
+
+    <div class="actions">
+      <a href="calculator.html">حاسبات جولة</a>
+      <button type="button" onclick="logoutJawla()">تسجيل الخروج</button>
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script>
+    requireJawlaLogin();
+
+    const plan = sessionStorage.getItem("jawlaPlan") || "full";
+
+    const mealsCard = document.getElementById("mealsCard");
+    const workoutsCard = document.getElementById("workoutsCard");
+    const planText = document.getElementById("planText");
+
+    if (plan === "training") {
+      mealsCard.style.display = "none";
+      planText.textContent = "اشتراكك الحالي: تمارين + حاسبات";
+    }
+
+    if (plan === "nutrition") {
+      workoutsCard.style.display = "none";
+      planText.textContent = "اشتراكك الحالي: وجبات + حاسبات";
+    }
+
+    if (plan === "full") {
+      planText.textContent = "اشتراكك الحالي: كامل";
+    }
+  </script>
+</body>
+</html>
